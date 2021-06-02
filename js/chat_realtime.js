@@ -96,32 +96,60 @@ var chat_realtime = function (j, k, l, m, n) {
             g = a.getSeconds(),
             date = d + '-' + (c < 10 ? '0' + c : c) + '-' + (b < 10 ? '0' + b : b) + ' ' + (e < 10 ? '0' + e : e) + ':' + (f < 10 ? '0' + f : f) + ':' + (g < 10 ? '0' + g : g);
         h.preventDefault();
-        if (document.querySelector('#message').value != '') {
-            var i = {
-                data: 'send',
-                name: m,
-                ke: uKe,
-                avatar: n,
-                message: document.querySelector('#message').value,
-                tipe: uTipe,
-                date: date
-            };
 
-            // push firebase
-            k.push(i);
+        // if (document.querySelector('#message').value != '') {
+        var i = {
+            data: 'send',
+            name: m,
+            ke: uKe,
+            avatar: n,
+            message: document.querySelector('#message').value,
+            tipe: uTipe,
+            date: date
+        };
 
-            // insert mysql
-            $.ajax({
-                url: l,
-                type: "post",
-                data: i,
-                crossDomain: true
-            });
-            document.querySelector('#message').value = '';
-            document.querySelector('.emoji-wysiwyg-editor').innerHTML = '';
-        } else {
-            alert('Please fill atlease message!')
-        }
+        //     // push firebase
+        //     // k.push(i);
+
+        //     // insert mysql
+        //     $.ajax({
+        //         url: l,
+        //         type: "post",
+        //         data: i,
+        //         crossDomain: true
+        //     });
+        //     document.querySelector('#message').value = '';
+        //     document.querySelector('.emoji-wysiwyg-editor').innerHTML = '';
+        // } else {
+        //     alert('Please fill atlease message!')
+        // }
+        var i = {
+            data: 'send',
+            name: m,
+            ke: uKe,
+            avatar: n,
+            message: document.querySelector('#message').value,
+            tipe: uTipe,
+            date: date
+        };
+        var formData = new FormData($("#document").get(0));
+
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: "php/upload_document.php",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                alert(data.message);
+            }, error: function (data) {
+                alert(data.message);
+            }
+        });
+
+        console.log($("#document").serialize());
+
     }, false);
 
     $('body').on('click', '.user', function () {
@@ -172,11 +200,11 @@ var chat_realtime = function (j, k, l, m, n) {
     function chatFirebase(a) {
         //console.log(a);
         var b = '';
-        if (a.name == m) {
-            b = '<li class="right clearfix ' + a.name + '">' + '<span class="chat-img pull-right">' + '<img src="' + a.avatar + '" alt="User Avatar">' + '</span>' + '<div class="chat-body clearfix">' + '<p class="msg">' + urltag(htmlEntities(a.message)) + '</p>' + '<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> ' + timing(new Date(a.date)) + '</small>' + '</div>' + '</li>'
-        } else {
-            b = '<li class="left clearfix ' + a.name + '">' + '<span class="chat-img pull-left">' + '<img src="' + a.avatar + '" alt="User Avatar">' + '</span>' + '<div class="chat-body clearfix">' + '<div class="kepala">' + '<strong class="primary-font">' + a.name + '</strong>' + '<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> ' + timing(new Date(a.date)) + '</small>' + '</div>' + '<p class="msg">' + urltag(htmlEntities(a.message)) + '</p>' + '</div>' + '</li>'
-        }
+        // if (a.name == m) {
+        //     b = '<li class="right clearfix ' + a.name + '">' + '<span class="chat-img pull-right">' + '<img src="' + a.avatar + '" alt="User Avatar">' + '</span>' + '<div class="chat-body clearfix">' + '<p class="msg">' + urltag(htmlEntities(a.message)) + '</p>' + '<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> ' + timing(new Date(a.date)) + '</small>' + '</div>' + '</li>'
+        // } else {
+        //     b = '<li class="left clearfix ' + a.name + '">' + '<span class="chat-img pull-left">' + '<img src="' + a.avatar + '" alt="User Avatar">' + '</span>' + '<div class="chat-body clearfix">' + '<div class="kepala">' + '<strong class="primary-font">' + a.name + '</strong>' + '<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> ' + timing(new Date(a.date)) + '</small>' + '</div>' + '<p class="msg">' + urltag(htmlEntities(a.message)) + '</p>' + '</div>' + '</li>'
+        // }
         return b
     }
 
@@ -292,10 +320,10 @@ var chat_realtime = function (j, k, l, m, n) {
         }
         //Retrieve all the files from the FileList object
         const files = target.files;
-        pdf = true;
         if (files) {
             for (let i = 0, f; f = files[i]; i++) {
                 if (f.type == "application/pdf") {
+                    pdf = true;
                     $('#reviewImg').html(`
                         <div class="file-pdf-container">
                             <div>
