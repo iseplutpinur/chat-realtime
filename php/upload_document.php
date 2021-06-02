@@ -11,7 +11,7 @@ try {
         }
     }
 
-    $targetFile = $targetDir . $id . ".pdf";
+    $targetFile = $targetDir . $id;
     $fileType = pathinfo($targetFile, PATHINFO_EXTENSION);
 
     if (file_exists($targetFile)) {

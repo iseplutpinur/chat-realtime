@@ -257,7 +257,7 @@ body {
 }
 
 .file-pdf-container {
-	/* display: block; */
+	display: flex;
 	margin-left: 14px;
 	margin-right: 74px;
 	margin-bottom: 5px;
@@ -265,12 +265,27 @@ body {
 	padding: 10px;
 	border-radius: 3px;
 	border: 1px solid #ccc;
+	justify-content: space-between;
 }
 
 .file-pdf-end {
 	display: inline;
-	position: absolute;
+	/* position: absolute; */
 	right: 76px;
 	bottom: 42px;
-	padding: 15px 20px;
+	padding: 5px 20px;
+}
+
+.right .file-pdf-container {
+	display: flex;
+	background-color: #232e52;
+	color: #ccc;
+	margin: 0;
+	flex-direction: row;
+	align-items: stretch;
+	justify-content: space-between;
+}
+
+.right a {
+	text-decoration: none;
 }

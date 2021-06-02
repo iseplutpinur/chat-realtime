@@ -58,6 +58,7 @@ class Chat_realtime
 					'message' => $r['message'],
 					'tipe' => $r['tipe'],
 					'date' => $r['date'],
+					'selektor' => $r['ke'],
 					'is_file' => $r['is_file'],
 					'nama_file' => $r['nama_file'],
 					'url_file' => $r['url_file'],
