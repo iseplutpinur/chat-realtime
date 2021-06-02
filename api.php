@@ -34,7 +34,7 @@ if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
 		} else if ($_POST['data'] == 'user') {
 			$data = $chat->get_user($_SESSION['user']);
 		} else if ($_POST['data'] == 'send') {
-			if (isset($_SESSION['user']) && !empty($_POST['ke']) && empty($_POST['message']) && !empty($_POST['date']) && !empty($_POST['avatar']) && !empty($_POST['tipe'])) {
+			if (isset($_SESSION['user']) && !empty($_POST['ke'])  && !empty($_POST['date']) && !empty($_POST['avatar']) && !empty($_POST['tipe'])) {
 				$data = $chat->send_message($_SESSION['user'], $_POST['ke'], $_POST['message'], $_POST['date'], $_POST['avatar'], $_POST['tipe'], $_POST['nama_file'], $_POST['is_file'], $_POST['url_file']);
 			}
 		} else if ($_POST['data'] == 'logout') {
