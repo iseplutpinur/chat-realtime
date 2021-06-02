@@ -7,7 +7,7 @@
 * Karena akan terus di update & dikembangkan.
 * Maka dari itu jangan lupa di fork & like ya sob :).
 *****************************************************/
-
+let pdf = false;
 var chat_realtime = function (j, k, l, m, n) {
     // break;
     var uKe = 'public',
@@ -292,30 +292,27 @@ var chat_realtime = function (j, k, l, m, n) {
         }
         //Retrieve all the files from the FileList object
         const files = target.files;
-
+        pdf = true;
         if (files) {
             for (let i = 0, f; f = files[i]; i++) {
-                if (/(pdf)$/i.test(f.type)) {
-                    const r = new FileReader();
-                    r.onload = (({ type, name, size }) => ({ target }) => {
-                        const base64Img = target.result;
-                        const binaryImg = convertDataURIToBinary(base64Img);
-                        const blob = new Blob([binaryImg], {
-                            type: type
-                        });
-                        const x = tampungImg.length;
-                        const blobURL = window.URL.createObjectURL(blob);
-                        const fileName = makeid(name.split('.').pop());
-                        tampungImg[x] = {
-                            name: fileName,
-                            type: type,
-                            size: size,
-                            binary: Array.from(binaryImg)
-                        };
-                        $('#reviewImg').append(`<img src="${blobURL}" data-idx="${fileName}" class="tmpImg" title="Remove"/>`);
-                    })(f);
-                    console.log(r);
-                    // r.readAsDataURL(f);
+                if (f.type == "application/pdf") {
+                    $('#reviewImg').html(`
+                        <div class="file-pdf-container">
+                            <div>
+                                <i class="fa fa-file-pdf-o 2x" aria-hidden="true" style="font-size: 2em;"></i> <span
+                                    class="nama-file">${f.name}</span>
+                            </div>
+                            <a href="#" class="file-pdf-end" id="cacnel-pdf">x</a>
+                        </div>
+                        <script>
+                            $("#cacnel-pdf").click((e) => {
+                                pdf = false;
+                                e.preventDefault();
+                                $('#reviewImg').html("");
+                                $('#fileinput').empty();
+                            });
+                        </script>
+                    `);
                 } else {
                     alert("Failed file type");
                 }
@@ -324,5 +321,4 @@ var chat_realtime = function (j, k, l, m, n) {
             alert("Failed to load files");
         }
     }, false);
-
 }
