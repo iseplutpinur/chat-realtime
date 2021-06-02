@@ -8,14 +8,16 @@
 * Maka dari itu jangan lupa di fork & like ya sob :).
 *****************************************************/
 let pdf = false;
+let nama_file = "";
 var chat_realtime = function (j, k, l, m, n) {
-    // break;
+
     var uKe = 'public',
         uTipe = 'rooms';
 
     userMysql();
 
     j.on("child_added", function (a) {
+        //console.log("added", a.key, a.val());
         if (a.val().tipe == 'login') {
             if (a.val().name != m) {
                 if ($('#' + a.val().name).length) {
@@ -96,60 +98,60 @@ var chat_realtime = function (j, k, l, m, n) {
             g = a.getSeconds(),
             date = d + '-' + (c < 10 ? '0' + c : c) + '-' + (b < 10 ? '0' + b : b) + ' ' + (e < 10 ? '0' + e : e) + ':' + (f < 10 ? '0' + f : f) + ':' + (g < 10 ? '0' + g : g);
         h.preventDefault();
+        if (document.querySelector('#message').value != '' || pdf) {
+            var random_file = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + ".pdf";
+            $("#url_file").val(random_file);
 
-        // if (document.querySelector('#message').value != '') {
-        var i = {
-            data: 'send',
-            name: m,
-            ke: uKe,
-            avatar: n,
-            message: document.querySelector('#message').value,
-            tipe: uTipe,
-            date: date
-        };
+            var i = {
+                data: 'send',
+                name: m,
+                ke: uKe,
+                avatar: n,
+                message: document.querySelector('#message').value,
+                tipe: uTipe,
+                date: date,
+                nama_file: nama_file,
+                is_file: pdf ? 1 : 0,
+                url_file: random_file
+            };
 
-        //     // push firebase
-        //     // k.push(i);
+            // push firebase
+            k.push(i);
 
-        //     // insert mysql
-        //     $.ajax({
-        //         url: l,
-        //         type: "post",
-        //         data: i,
-        //         crossDomain: true
-        //     });
-        //     document.querySelector('#message').value = '';
-        //     document.querySelector('.emoji-wysiwyg-editor').innerHTML = '';
-        // } else {
-        //     alert('Please fill atlease message!')
-        // }
-        var i = {
-            data: 'send',
-            name: m,
-            ke: uKe,
-            avatar: n,
-            message: document.querySelector('#message').value,
-            tipe: uTipe,
-            date: date
-        };
-        var formData = new FormData($("#document").get(0));
-
-        $.ajax({
-            type: "POST",
-            dataType: "JSON",
-            url: "php/upload_document.php",
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                alert(data.message);
-            }, error: function (data) {
-                alert(data.message);
-            }
-        });
-
-        console.log($("#document").serialize());
-
+            // insert mysql
+            $.ajax({
+                url: l,
+                type: "post",
+                data: i,
+                crossDomain: true,
+                success: function (dat) {
+                    if (pdf) {
+                        var formData = new FormData($("#document").get(0));
+                        $.ajax({
+                            type: "POST",
+                            dataType: "JSON",
+                            url: "php/upload_document.php",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                console.log(data.message);
+                            }, error: function (data) {
+                                alert(data.message);
+                            }, complete: () => {
+                                pdf = false;
+                                $('#reviewImg').html("");
+                                $('#fileinput').empty();
+                            }
+                        });
+                    }
+                }
+            });
+            document.querySelector('#message').value = '';
+            document.querySelector('.emoji-wysiwyg-editor').innerHTML = '';
+        } else {
+            alert('Please fill atlease message!')
+        }
     }, false);
 
     $('body').on('click', '.user', function () {
@@ -198,13 +200,13 @@ var chat_realtime = function (j, k, l, m, n) {
     }
 
     function chatFirebase(a) {
-        //console.log(a);
+        console.log(a);
         var b = '';
-        // if (a.name == m) {
-        //     b = '<li class="right clearfix ' + a.name + '">' + '<span class="chat-img pull-right">' + '<img src="' + a.avatar + '" alt="User Avatar">' + '</span>' + '<div class="chat-body clearfix">' + '<p class="msg">' + urltag(htmlEntities(a.message)) + '</p>' + '<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> ' + timing(new Date(a.date)) + '</small>' + '</div>' + '</li>'
-        // } else {
-        //     b = '<li class="left clearfix ' + a.name + '">' + '<span class="chat-img pull-left">' + '<img src="' + a.avatar + '" alt="User Avatar">' + '</span>' + '<div class="chat-body clearfix">' + '<div class="kepala">' + '<strong class="primary-font">' + a.name + '</strong>' + '<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> ' + timing(new Date(a.date)) + '</small>' + '</div>' + '<p class="msg">' + urltag(htmlEntities(a.message)) + '</p>' + '</div>' + '</li>'
-        // }
+        if (a.name == m) {
+            b = '<li class="right clearfix ' + a.name + '">' + '<span class="chat-img pull-right">' + '<img src="' + a.avatar + '" alt="User Avatar">' + '</span>' + '<div class="chat-body clearfix">' + '<p class="msg">' + urltag(htmlEntities(a.message)) + '</p>' + '<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> ' + timing(new Date(a.date)) + '</small>' + '</div>' + '</li>'
+        } else {
+            b = '<li class="left clearfix ' + a.name + '">' + '<span class="chat-img pull-left">' + '<img src="' + a.avatar + '" alt="User Avatar">' + '</span>' + '<div class="chat-body clearfix">' + '<div class="kepala">' + '<strong class="primary-font">' + a.name + '</strong>' + '<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> ' + timing(new Date(a.date)) + '</small>' + '</div>' + '<p class="msg">' + urltag(htmlEntities(a.message)) + '</p>' + '</div>' + '</li>'
+        }
         return b
     }
 
@@ -223,6 +225,7 @@ var chat_realtime = function (j, k, l, m, n) {
                 var b = '';
                 if (f == 'all') {
                     $.each(a, function (i, a) {
+                        console.log(a);
                         if ($('#' + a.selektor).hasClass('active')) {
                             if (a.name == m) {
                                 b += '<li class="right clearfix ' + a.name + '">' + '<span class="chat-img pull-right">' + '<img src="' + a.avatar + '" alt="User Avatar">' + '</span>' + '<div class="chat-body clearfix">' + '<p class="msg">' + urltag(htmlEntities(a.message)) + '</p>' + '<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> ' + timing(new Date(a.date)) + '</small>' + '</div>' + '</li>'
@@ -243,6 +246,7 @@ var chat_realtime = function (j, k, l, m, n) {
                     $('.chat').prepend(b);
                 } else {
                     $.each(a, function (i, a) {
+                        console.log(a);
                         if (a.name == m) {
                             b += '<li class="right clearfix ' + a.name + '">' + '<span class="chat-img pull-right">' + '<img src="' + a.avatar + '" alt="User Avatar">' + '</span>' + '<div class="chat-body clearfix">' + '<p class="msg">' + urltag(htmlEntities(a.message)) + '</p>' + '<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> ' + timing(new Date(a.date)) + '</small>' + '</div>' + '</li>'
                         } else {
@@ -324,6 +328,7 @@ var chat_realtime = function (j, k, l, m, n) {
             for (let i = 0, f; f = files[i]; i++) {
                 if (f.type == "application/pdf") {
                     pdf = true;
+                    nama_file = f.name;
                     $('#reviewImg').html(`
                         <div class="file-pdf-container">
                             <div>

@@ -2,7 +2,7 @@
 
 header("Access-Control-Allow-Origin: *");
 try {
-    $id = substr(md5(time()), 0, 16);;
+    $id = $_POST['url_file'];
 
     $targetDir = "./../pdf/";
     if (!is_dir($targetDir)) {
