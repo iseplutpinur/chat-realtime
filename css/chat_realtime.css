@@ -284,6 +284,7 @@ body {
 	flex-direction: row;
 	align-items: stretch;
 	justify-content: space-between;
+	margin-bottom: 7px;
 }
 
 .right a {
