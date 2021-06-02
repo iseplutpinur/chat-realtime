@@ -82,6 +82,10 @@
 						<div class="chat-box">
 							<form>
 								<div class="input-group">
+									<label class="btn btn-default fileinput input-group-addon">
+										<i class="fa fa-paperclip" aria-hidden="true" style="font-size: 1.2em;"></i>
+										<input type="file" id="fileinput" multiple style="display: none;">
+									</label>
 									<input id="message" type="text" data-emojiable="true"
 										class="form-control border no-shadow no-rounded"
 										placeholder="Type your message here">
@@ -121,7 +125,6 @@
 		$(function () {
 
 			var userlogin = false;
-
 			// cek user	session
 			$.ajax({
 				url: apis,
