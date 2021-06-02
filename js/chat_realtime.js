@@ -3,20 +3,19 @@
 * Coded by Ican Bachors 2016.
 * http://ibacor.com/labs/chat-realtime
 * Updates will be posted to this site.
-* Aplikasi ini akan selalu bersetatus (BETA) 
+* Aplikasi ini akan selalu bersetatus (BETA)
 * Karena akan terus di update & dikembangkan.
 * Maka dari itu jangan lupa di fork & like ya sob :).
 *****************************************************/
 
-var chat_realtime = function(j, k, l, m, n) {
-	
-	var uKe = 'public',
-		uTipe = 'rooms';
+var chat_realtime = function (j, k, l, m, n) {
+    // break;
+    var uKe = 'public',
+        uTipe = 'rooms';
 
     userMysql();
 
-    j.on("child_added", function(a) {
-        //console.log("added", a.key, a.val());
+    j.on("child_added", function (a) {
         if (a.val().tipe == 'login') {
             if (a.val().name != m) {
                 if ($('#' + a.val().name).length) {
@@ -43,12 +42,12 @@ var chat_realtime = function(j, k, l, m, n) {
         j.child(a.key).remove()
     });
 
-    k.on("child_added", function(a) {
+    k.on("child_added", function (a) {
         //console.log("added", a.key, a.val());
         var b = a.val().name,
             ke = a.val().ke;
-		
-		// inbox user
+
+        // inbox user
         if (ke == m) {
             document.querySelector('#' + b + ' .time').innerHTML = timing(new Date(a.val().date));
             document.querySelector('#' + b + ' .last-message').innerHTML = '<i class="fa fa-reply"></i> ' + htmlEntities(a.val().message);
@@ -59,9 +58,9 @@ var chat_realtime = function(j, k, l, m, n) {
                 document.querySelector('#' + b + ' .chat-alert').innerHTML = (parseInt(document.querySelector('#' + b + ' .chat-alert').innerHTML) + 1)
             }
         }
-		
-		// inbox room
-		else if (ke != m && $('#' + ke).data('tipe') == 'rooms') {
+
+        // inbox room
+        else if (ke != m && $('#' + ke).data('tipe') == 'rooms') {
             document.querySelector('#' + ke + ' strong').innerHTML = a.val().name;
             document.querySelector('#' + ke + ' img').src = a.val().avatar;
             document.querySelector('#' + ke + ' .time').innerHTML = timing(new Date(a.val().date));
@@ -73,9 +72,9 @@ var chat_realtime = function(j, k, l, m, n) {
                 document.querySelector('#' + ke + ' .chat-alert').innerHTML = (parseInt(document.querySelector('#' + ke + ' .chat-alert').innerHTML) + 1)
             }
         }
-		
-		// send message
-		else if (b == m) {
+
+        // send message
+        else if (b == m) {
             document.querySelector('#' + ke + ' .time').innerHTML = timing(new Date(a.val().date));
             document.querySelector('#' + ke + ' .last-message').innerHTML = '<i class="fa fa-check"></i> ' + htmlEntities(a.val().message);
             document.querySelector('.chat').innerHTML += (chatFirebase(a.val()))
@@ -86,8 +85,8 @@ var chat_realtime = function(j, k, l, m, n) {
         k.child(a.key).remove()
     });
 
-	//send chat
-    document.querySelector('#send').addEventListener("click", function(h) {
+    //send chat
+    document.querySelector('#send').addEventListener("click", function (h) {
         var a = new Date(),
             b = a.getDate(),
             c = (a.getMonth() + 1),
@@ -107,11 +106,11 @@ var chat_realtime = function(j, k, l, m, n) {
                 tipe: uTipe,
                 date: date
             };
-			
-			// push firebase
+
+            // push firebase
             k.push(i);
-			
-			// insert mysql
+
+            // insert mysql
             $.ajax({
                 url: l,
                 type: "post",
@@ -119,13 +118,13 @@ var chat_realtime = function(j, k, l, m, n) {
                 crossDomain: true
             });
             document.querySelector('#message').value = '';
-			document.querySelector('.emoji-wysiwyg-editor').innerHTML = '';
+            document.querySelector('.emoji-wysiwyg-editor').innerHTML = '';
         } else {
             alert('Please fill atlease message!')
         }
     }, false);
 
-    $('body').on('click', '.user', function() {
+    $('body').on('click', '.user', function () {
         $('.chat').html('');
         $('.user').removeClass("active");
         $(this).addClass("active");
@@ -146,9 +145,9 @@ var chat_realtime = function(j, k, l, m, n) {
             data: 'data=user',
             crossDomain: true,
             dataType: 'json',
-            success: function(a) {
+            success: function (a) {
                 var b = '';
-                $.each(a, function(i, a) {
+                $.each(a, function (i, a) {
                     if (a.name != m) {
                         b += '<li id="' + a.name + '" class="user bounceInDown" data-tipe="users">';
                         b += '	<a href="#" class="clearfix">';
@@ -192,10 +191,10 @@ var chat_realtime = function(j, k, l, m, n) {
             },
             crossDomain: true,
             dataType: 'json',
-            success: function(a) {
+            success: function (a) {
                 var b = '';
                 if (f == 'all') {
-                    $.each(a, function(i, a) {
+                    $.each(a, function (i, a) {
                         if ($('#' + a.selektor).hasClass('active')) {
                             if (a.name == m) {
                                 b += '<li class="right clearfix ' + a.name + '">' + '<span class="chat-img pull-right">' + '<img src="' + a.avatar + '" alt="User Avatar">' + '</span>' + '<div class="chat-body clearfix">' + '<p class="msg">' + urltag(htmlEntities(a.message)) + '</p>' + '<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> ' + timing(new Date(a.date)) + '</small>' + '</div>' + '</li>'
@@ -215,7 +214,7 @@ var chat_realtime = function(j, k, l, m, n) {
                     });
                     $('.chat').prepend(b);
                 } else {
-                    $.each(a, function(i, a) {
+                    $.each(a, function (i, a) {
                         if (a.name == m) {
                             b += '<li class="right clearfix ' + a.name + '">' + '<span class="chat-img pull-right">' + '<img src="' + a.avatar + '" alt="User Avatar">' + '</span>' + '<div class="chat-body clearfix">' + '<p class="msg">' + urltag(htmlEntities(a.message)) + '</p>' + '<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> ' + timing(new Date(a.date)) + '</small>' + '</div>' + '</li>'
                         } else {
@@ -268,8 +267,8 @@ var chat_realtime = function(j, k, l, m, n) {
         }
         return (Math.floor(s) > 0 ? Math.floor(s) + " sec ago" : "just now")
     }
-	
-	function urltag(d, e) {
+
+    function urltag(d, e) {
         var f = {
             link: {
                 regex: /((^|)(https|http|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig,
@@ -281,10 +280,49 @@ var chat_realtime = function(j, k, l, m, n) {
             }
         };
         var g = $.extend(f, e);
-        $.each(g, function(a, b) {
+        $.each(g, function (a, b) {
             d = d.replace(b.regex, b.template)
         });
         return d
     }
+
+    document.getElementById('fileinput').addEventListener('change', ({ target }) => {
+        if (!$('.imagetmp').is(':visible')) {
+            $('.imagetmp').css("display", "block");
+        }
+        //Retrieve all the files from the FileList object
+        const files = target.files;
+
+        if (files) {
+            for (let i = 0, f; f = files[i]; i++) {
+                if (/(pdf)$/i.test(f.type)) {
+                    const r = new FileReader();
+                    r.onload = (({ type, name, size }) => ({ target }) => {
+                        const base64Img = target.result;
+                        const binaryImg = convertDataURIToBinary(base64Img);
+                        const blob = new Blob([binaryImg], {
+                            type: type
+                        });
+                        const x = tampungImg.length;
+                        const blobURL = window.URL.createObjectURL(blob);
+                        const fileName = makeid(name.split('.').pop());
+                        tampungImg[x] = {
+                            name: fileName,
+                            type: type,
+                            size: size,
+                            binary: Array.from(binaryImg)
+                        };
+                        $('#reviewImg').append(`<img src="${blobURL}" data-idx="${fileName}" class="tmpImg" title="Remove"/>`);
+                    })(f);
+                    console.log(r);
+                    // r.readAsDataURL(f);
+                } else {
+                    alert("Failed file type");
+                }
+            }
+        } else {
+            alert("Failed to load files");
+        }
+    }, false);
 
 }
